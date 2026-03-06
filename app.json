@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Inviziox",
-    "slug": "Inviziox",
+    "slug": "inviziox",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,8 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
@@ -43,6 +44,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "50dec6de-814c-49e8-af09-7ee68d0701e4"
+      }
+    },
+    "owner": "inviziox"
   }
 }
