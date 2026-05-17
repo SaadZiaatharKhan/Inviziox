@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
-  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Polyline, Path } from "react-native-svg";
-import { icons } from "@/constants/icons";
+import { shellAssets, shellsData } from "@/constants/shellsData";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,50 +32,23 @@ const themeConfig: any = {
   },
 };
 
-/* ---------------- MOCK DATA ---------------- */
+const getGraphPoints = (data: readonly number[]) => {
+  const graphWidth = width - 70;
+  const graphHeight = 180;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
 
-const stocks = [
-  {
-    id: 1,
-    name: "Apple",
-    price: "$189.22",
-    change: "+2.14%",
-    owned: "12 Shares",
-    graph: "M0 40 Q20 10 40 25 T80 20 T120 30",
-  },
-  {
-    id: 2,
-    name: "Tesla",
-    price: "$248.91",
-    change: "-1.62%",
-    owned: "5 Shares",
-    graph: "M0 30 Q20 45 40 20 T80 35 T120 15",
-  },
-];
+  return data
+    .map((value, index) => {
+      const x = (index / (data.length - 1)) * graphWidth;
+      const y =
+        graphHeight -
+        ((value - min) / (max - min || 1)) * graphHeight;
 
-const crypto = [
-  {
-    id: 1,
-    name: "Bitcoin",
-    price: "$45,389",
-    change: "+2.45%",
-    owned: "0.52 BTC",
-    image: icons.bitcoin,
-    graph: "M0 40 Q20 10 40 25 T80 20 T120 30",
-  },
-];
-
-const gold = [
-  {
-    id: 1,
-    name: "Gold",
-    price: "$2,045",
-    change: "+1.8%",
-    owned: "1.2 kg",
-    image: icons.gold,
-    graph: "M0 40 Q20 20 40 30 T80 15 T120 25",
-  },
-];
+      return `${x},${y}`;
+    })
+    .join(" ");
+};
 
 /* ---------------- BOTTOM SHEET ---------------- */
 
@@ -180,7 +152,13 @@ const DetailBottomSheet = ({
 
 export default function ShellScreen() {
   const { category, shell } = useLocalSearchParams();
-  const theme = themeConfig[category as string] || themeConfig.high;
+  const categoryKey = category as keyof typeof shellsData;
+  const shellKey = shell as string;
+  const theme = themeConfig[categoryKey] || themeConfig.high;
+  const shellsForCategory: any = shellsData[categoryKey] || shellsData.high;
+  const shellDetail: any =
+    shellsForCategory[shellKey] ||
+    Object.values(shellsForCategory)[0];
 
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [showSheet, setShowSheet] = useState(false);
@@ -201,15 +179,13 @@ export default function ShellScreen() {
 
         {/* Title */}
         <Text className="text-white text-3xl font-bold mb-6">
-          {shell
-            ? shell
-                .toString()
-                .replace(/([a-zA-Z]+)(\d+)/, "$1 $2")
-                .replace(/^./, (c) => c.toUpperCase())
-            : ""}
+          {shellDetail.name}
+        </Text>
+        <Text className="text-gray-400 -mt-4 mb-6">
+          {shellDetail.subtitle}
         </Text>
 
-        {/* PERFORMANCE */}
+        {/* GRAPH */}
         <View
           style={{
             backgroundColor: "rgba(255,255,255,0.03)",
@@ -222,24 +198,26 @@ export default function ShellScreen() {
             style={{ color: theme.accent }}
             className="mb-4 font-semibold"
           >
-            Performance
+            Graph
           </Text>
 
           <Svg height={200} width={width - 40}>
             <Polyline
-              points="0,150 50,100 100,120 150,80 200,110 250,60 300,90"
+              points={getGraphPoints(shellDetail.graph)}
               fill="none"
               stroke={theme.accent}
               strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </Svg>
         </View>
 
         {/* SECTION RENDER FUNCTION */}
         {[
-          { title: "Stocks", data: stocks },
-          { title: "Crypto", data: crypto },
-          { title: "Gold & Commodities", data: gold },
+          { title: "Stocks", data: shellAssets.stocks },
+          { title: "Crypto", data: shellAssets.crypto },
+          { title: "Gold", data: shellAssets.gold },
         ].map((section, idx) => (
           <View key={idx}>
             <Text

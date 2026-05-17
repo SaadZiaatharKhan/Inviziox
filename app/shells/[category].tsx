@@ -10,26 +10,7 @@ import React from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { icons } from "@/constants/icons";
-
-/* ---------------- SHELL DATA ---------------- */
-
-const shellData: any = {
-  high: {
-    shell1: { value: 12000, percent: "+4.2%" },
-    shell2: { value: 18000, percent: "+2.1%" },
-    shell3: { value: 9500, percent: "-1.5%" },
-  },
-  mid: {
-    shell1: { value: 8000, percent: "+1.2%" },
-    shell2: { value: 6700, percent: "-0.5%" },
-    shell3: { value: 7200, percent: "+3.5%" },
-  },
-  low: {
-    shell1: { value: 5000, percent: "-3.1%" },
-    shell2: { value: 4200, percent: "+0.8%" },
-    shell3: { value: 6100, percent: "+2.4%" },
-  },
-};
+import { shellsData } from "@/constants/shellsData";
 
 /* ---------------- SHELL CONFIG ---------------- */
 
@@ -66,8 +47,9 @@ export default function CategoryScreen() {
   const { category } = useLocalSearchParams();
   const router = useRouter();
 
-  const config = shellConfig[category as string];
-  const data = shellData[category as string];
+  const categoryKey = category as keyof typeof shellsData;
+  const config = shellConfig[categoryKey] || shellConfig.high;
+  const data = shellsData[categoryKey] || shellsData.high;
 
   return (
     <LinearGradient
@@ -112,15 +94,14 @@ export default function CategoryScreen() {
 
         {/* SUB SHELL CARDS */}
         <View className="mt-8">
-          {Object.keys(data).map((shell, index) => {
-            const item = data[shell];
+          {Object.entries(data).map(([shell, item]) => {
             const positive = item.percent.includes("+");
 
             return (
               <TouchableOpacity
                 key={shell}
                 onPress={() =>
-                  router.push(`/shells/${category}/${shell}`)
+                  router.push(`/shells/${categoryKey}/${shell}`)
                 }
                 style={[
                   styles.subCard,
@@ -134,13 +115,13 @@ export default function CategoryScreen() {
                     resizeMode="contain"
                   />
                   <Text className="text-white font-semibold ml-3">
-                    Shell {index + 1}
+                    {item.name}
                   </Text>
                 </View>
 
                 <View className="items-end">
                   <Text className="text-white font-bold text-lg">
-                    ₹ {item.value}
+                    {item.value}
                   </Text>
                   <Text
                     className={`text-sm font-semibold ${

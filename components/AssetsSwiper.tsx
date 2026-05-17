@@ -6,6 +6,7 @@ import {
   Modal,
   Dimensions,
   Pressable,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import Svg, { Path } from "react-native-svg";
@@ -13,15 +14,30 @@ import { icons } from "@/constants/icons";
 
 const { height } = Dimensions.get("window");
 
+const sipOptions = [
+  {
+    label: "Daily",
+    rate: "$25",
+  },
+  {
+    label: "Weekly",
+    rate: "$150",
+  },
+  {
+    label: "Monthly",
+    rate: "$500",
+  },
+];
+
 /* -------------------- DATA -------------------- */
 const assets = [
   {
     id: 1,
     name: "Gold",
-    unit: "per kg",
+    unit: "per troy oz",
     price: "$2,045",
     change: "+1.8%",
-    owned: "1.2 kg",
+    owned: "38.58 oz t",
     color: "#facc15",
     image: icons.gold,
     graph: "M0 40 Q20 20 40 30 T80 15 T120 25",
@@ -29,35 +45,13 @@ const assets = [
   {
     id: 2,
     name: "Silver",
-    unit: "per kg",
+    unit: "per troy oz",
     price: "$24.61",
     change: "+0.9%",
-    owned: "8.5 kg",
+    owned: "273.28 oz t",
     color: "#e5e7eb",
     image: icons.silver,
     graph: "M0 35 Q20 25 40 28 T80 18 T120 22",
-  },
-  {
-    id: 3,
-    name: "Oil",
-    unit: "per barrel",
-    price: "$78.32",
-    change: "-1.2%",
-    owned: "12 barrels",
-    color: "#ef4444",
-    image: icons.oil,
-    graph: "M0 30 Q20 45 40 25 T80 40 T120 20",
-  },
-  {
-    id: 4,
-    name: "Copper",
-    unit: "per lb",
-    price: "$4.12",
-    change: "+2.4%",
-    owned: "320 lb",
-    color: "#fb923c",
-    image: icons.copper,
-    graph: "M0 38 Q20 30 40 35 T80 22 T120 28",
   },
 ];
 
@@ -66,12 +60,16 @@ const AssetBottomSheet = ({
   visible,
   asset,
   onClose,
+  onStartSip,
 }: {
   visible: boolean;
   asset: any;
   onClose: () => void;
+  onStartSip: (option: { label: string; rate: string }) => void;
 }) => {
   if (!asset) return null;
+
+  const isGold = asset.name === "Gold";
 
   return (
     <Modal transparent animationType="slide" visible={visible}>
@@ -138,31 +136,163 @@ const AssetBottomSheet = ({
           </Svg>
 
           {/* Owned */}
-          <View className="mt-6">
-            <Text className="text-text-muted text-sm">
-              Currently Owned
-            </Text>
-            <Text className="text-white text-2xl font-semibold">
-              {asset.owned}
-            </Text>
-          </View>
+          {isGold ? (
+            <View className="mt-6">
+              <Text className="text-text-muted text-sm mb-3">
+                Start SIP
+              </Text>
 
-          {/* Actions */}
-          <View className="flex-row justify-between mt-8">
-            <TouchableOpacity className="bg-green-500 flex-1 mr-2 py-4 rounded-xl">
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {sipOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.label}
+                    activeOpacity={0.75}
+                    onPress={() => onStartSip(option)}
+                    className="bg-white/5 border border-white/10 rounded-2xl p-4 mr-3"
+                    style={{ width: 150 }}
+                  >
+                    <View className="flex-row items-center justify-between">
+                      <Text className="text-white font-semibold">
+                        {option.label}
+                      </Text>
+                      <Text className="text-yellow-300 font-bold">
+                        {option.rate}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          ) : (
+            <View className="mt-6">
+              <Text className="text-text-muted text-sm">
+                Currently Owned
+              </Text>
+              <Text className="text-white text-2xl font-semibold">
+                {asset.owned}
+              </Text>
+            </View>
+          )}
+
+          {!isGold && (
+            <View className="flex-row justify-between mt-8">
+              <TouchableOpacity className="bg-green-500 flex-1 mr-2 py-4 rounded-xl">
+                <Text className="text-center text-black font-semibold">
+                  Buy
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="bg-red-500 flex-1 ml-2 py-4 rounded-xl">
+                <Text className="text-center text-white font-semibold">
+                  Sell
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+};
+
+const SipPopup = ({
+  visible,
+  option,
+  onCancel,
+  onBuy,
+}: {
+  visible: boolean;
+  option: { label: string; rate: string } | null;
+  onCancel: () => void;
+  onBuy: () => void;
+}) => {
+  if (!option) return null;
+
+  return (
+    <Modal transparent animationType="fade" visible={visible}>
+      <View className="flex-1 items-center justify-center bg-black/60 px-6">
+        <View className="w-full rounded-3xl bg-raisinBlack p-5">
+          <Text className="text-white text-xl font-semibold">
+            Start SIP
+          </Text>
+          <Text className="text-gray-400 mt-2">
+            {option.label} gold SIP
+          </Text>
+          <Text className="text-yellow-300 text-3xl font-bold mt-4">
+            {option.rate}
+          </Text>
+
+          <View className="flex-row mt-8">
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onBuy}
+              className="bg-green-500 flex-1 mr-2 py-4 rounded-xl"
+            >
               <Text className="text-center text-black font-semibold">
                 Buy
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity className="bg-red-500 flex-1 ml-2 py-4 rounded-xl">
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onCancel}
+              className="bg-white/10 flex-1 ml-2 py-4 rounded-xl"
+            >
               <Text className="text-center text-white font-semibold">
-                Sell
+                Cancel
               </Text>
             </TouchableOpacity>
           </View>
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const FeesPopup = ({
+  visible,
+  onCancel,
+}: {
+  visible: boolean;
+  onCancel: () => void;
+}) => {
+  return (
+    <Modal transparent animationType="fade" visible={visible}>
+      <View className="flex-1 items-center justify-center bg-black/60 px-6">
+        <View className="w-full rounded-3xl bg-raisinBlack p-5">
+          <Text className="text-white text-xl font-semibold">
+            Confirm Purchase
+          </Text>
+          <Text className="text-gray-300 mt-3 leading-6">
+            Government fees and platform fees are applied. Do you want to proceed?
+          </Text>
+
+          <View className="flex-row mt-8">
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {}}
+              className="bg-green-500 flex-1 mr-2 py-4 rounded-xl"
+            >
+              <Text className="text-center text-black font-semibold">
+                Buy
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onCancel}
+              className="bg-white/10 flex-1 ml-2 py-4 rounded-xl"
+            >
+              <Text className="text-center text-white font-semibold">
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </Modal>
   );
 };
@@ -170,11 +300,33 @@ const AssetBottomSheet = ({
 /* -------------------- MAIN COMPONENT -------------------- */
 const AssetsSwiper = () => {
   const [selectedAsset, setSelectedAsset] = useState<any>(null);
+  const [selectedSip, setSelectedSip] = useState<{
+    label: string;
+    rate: string;
+  } | null>(null);
   const [showSheet, setShowSheet] = useState(false);
+  const [showSipPopup, setShowSipPopup] = useState(false);
+  const [showFeesPopup, setShowFeesPopup] = useState(false);
 
   const openAsset = (asset: any) => {
     setSelectedAsset(asset);
     setShowSheet(true);
+  };
+
+  const closeAllPopups = () => {
+    setShowFeesPopup(false);
+    setShowSipPopup(false);
+    setSelectedSip(null);
+  };
+
+  const openSipPopup = (option: { label: string; rate: string }) => {
+    setSelectedSip(option);
+    setShowSipPopup(true);
+  };
+
+  const openFeesPopup = () => {
+    setShowSipPopup(false);
+    setShowFeesPopup(true);
   };
 
   return (
@@ -182,7 +334,7 @@ const AssetsSwiper = () => {
       {/* Header */}
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-lg font-semibold text-white">
-          Assets
+          Gold and SIP
         </Text>
         <TouchableOpacity activeOpacity={0.7}>
           <Text className="text-sm text-text-secondary">
@@ -254,6 +406,17 @@ const AssetsSwiper = () => {
         visible={showSheet}
         asset={selectedAsset}
         onClose={() => setShowSheet(false)}
+        onStartSip={openSipPopup}
+      />
+      <SipPopup
+        visible={showSipPopup}
+        option={selectedSip}
+        onCancel={closeAllPopups}
+        onBuy={openFeesPopup}
+      />
+      <FeesPopup
+        visible={showFeesPopup}
+        onCancel={closeAllPopups}
       />
     </View>
   );

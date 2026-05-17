@@ -60,8 +60,8 @@ export const stocksData: StockItem[] = [
   },
   {
     id: "stk3",
-    name: "Google",
-    symbol: "GOOGL",
+    name: "IB Constructions",
+    symbol: "IBC",
     amount: 9800,
     profitLossPercent: -3.2,
     stocksOwned: 5,

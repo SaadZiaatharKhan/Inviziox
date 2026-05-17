@@ -34,7 +34,7 @@ const stocks = [
   },
   {
     id: 3,
-    name: "Google",
+    name: "IB Constuctions",
     price: "$142.67",
     change: "+3.08%",
     owned: 8,

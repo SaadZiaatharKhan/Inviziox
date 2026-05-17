@@ -9,9 +9,11 @@ import React, { useState } from "react";
 import { icons } from "@/constants/icons";
 import { LinearGradient } from "expo-linear-gradient";
 import CandlestickChart from "@/components/CandlestickChart";
-import TopStocks from "@/components/TopStocks";
-import TopCoins from "@/components/TopCoins";
 import AssetsSwiper from "@/components/AssetsSwiper";
+import TopShells from "@/components/TopShells";
+import HighCapShells from "@/components/HighCapShells";
+import MidCapShells from "@/components/MidCapShells";
+import LowCapShells from "@/components/LowCapShells";
 
 const Home = () => {
   const [showGraph, setShowGraph] = useState(false);
@@ -96,8 +98,10 @@ const Home = () => {
       </View>
 
       {/* 🔹 Sections (NO items-center here) */}
-      <TopStocks />
-      <TopCoins />
+      <TopShells />
+      <HighCapShells />
+      <MidCapShells />
+      <LowCapShells />
       <AssetsSwiper />
 
       {/* Bottom spacing */}

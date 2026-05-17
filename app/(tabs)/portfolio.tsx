@@ -28,13 +28,14 @@ const graphData: any = {
 
 const cards = [
   {
-    name: "Titan Shell",
+    name: "Titan Vault",
     subtitle: "High Risk • High Reward",
     amount: "$2,400",
     percent: "+4.5%",
     positive: true,
     route: "high",
-    colors: ["#7f1d1d", "#ef4444"],
+    shellRoute: "titan-vault",
+    colors: ["#7f1d1d", "#ef4444"] as const,
     image: icons.redshell,
   },
   {
@@ -44,17 +45,19 @@ const cards = [
     percent: "+2.1%",
     positive: true,
     route: "mid",
-    colors: ["#1e3a8a", "#3b82f6"],
+    shellRoute: "atlas-core",
+    colors: ["#1e3a8a", "#3b82f6"] as const,
     image: icons.guardianshell,
   },
   {
-    name: "Guardian Shell",
+    name: "Guardian Base",
     subtitle: "Low Risk • Stable",
     amount: "$900",
     percent: "-3.2%",
     positive: false,
     route: "low",
-    colors: ["#064e3b", "#10b981"],
+    shellRoute: "guardian-base",
+    colors: ["#064e3b", "#10b981"] as const,
     image: icons.greenshell,
   },
 ];
@@ -123,7 +126,7 @@ const Portfolio = () => {
         <TouchableOpacity
           key={index}
           activeOpacity={0.9}
-          onPress={() => router.push(`/shells/${card.route}`)}
+          onPress={() => router.push(`/shells/${card.route}/${card.shellRoute}`)}
           style={[styles.horizontalWrapper, { shadowColor: card.colors[1] }]}
         >
           <LinearGradient

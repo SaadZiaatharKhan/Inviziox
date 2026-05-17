@@ -76,6 +76,11 @@ export default function Settings() {
           icon="information-circle-outline"
           route="/(tabs)/settings/about"
         />
+        <MenuItem
+          title="Help & Support"
+          icon="help-circle-outline"
+          route="/(tabs)/settings/help"
+        />
       </View>
     </ScrollView>
   );

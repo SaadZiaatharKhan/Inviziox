@@ -20,6 +20,7 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
+    country: "India",
   });
 
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,6 @@ const SignUp = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-pianoBlack">
-
       {/* ================= SUCCESS MODAL ================= */}
       <Modal
         visible={showSuccessModal}
@@ -56,20 +56,18 @@ const SignUp = () => {
           <View className="bg-white w-full rounded-3xl p-8 items-center">
             <Image source={icons.success} className="w-20 h-20 mb-4" />
 
-            <Text className="text-2xl font-JakartaBold">
-              Account Created
-            </Text>
+            <Text className="text-2xl font-JakartaBold">Account Created</Text>
 
             <Text className="text-gray-500 text-center mt-2">
               You have successfully created your account.
             </Text>
 
             <CustomButton
-              title="Go to Login"
+              title="Go to Questionaire"
               onPress={() => {
                 setShowSuccessModal(false);
                 setTimeout(() => {
-                  router.replace("/(auth)/sign-in");
+                  router.replace("/(onboarding)/quiz");
                 }, 150);
               }}
               className="mt-6 w-full"
@@ -89,9 +87,7 @@ const SignUp = () => {
           <View className="bg-white w-full rounded-3xl p-8 items-center">
             <Image source={icons.alert} className="w-20 h-20 mb-4" />
 
-            <Text className="text-2xl font-JakartaBold">
-              Error
-            </Text>
+            <Text className="text-2xl font-JakartaBold">Error</Text>
 
             <Text className="text-gray-500 text-center mt-2">
               {errorMessage}
@@ -120,7 +116,6 @@ const SignUp = () => {
           showsVerticalScrollIndicator={false}
         >
           <View className="flex-1 justify-center px-6">
-
             {/* ===== TITLE ===== */}
             <Text className="text-white text-3xl font-bold text-center mb-10">
               Sign Up
@@ -128,15 +123,12 @@ const SignUp = () => {
 
             {/* ===== CARD ===== */}
             <View className="bg-bunker rounded-3xl p-6 shadow-xl">
-
               <InputField
                 label="Full Name"
                 placeholder="Enter your name"
                 icon={icons.user}
                 value={form.name}
-                onChangeText={(value) =>
-                  setForm({ ...form, name: value })
-                }
+                onChangeText={(value) => setForm({ ...form, name: value })}
               />
 
               <InputField
@@ -144,9 +136,7 @@ const SignUp = () => {
                 placeholder="Enter your email"
                 icon={icons.email}
                 value={form.email}
-                onChangeText={(value) =>
-                  setForm({ ...form, email: value })
-                }
+                onChangeText={(value) => setForm({ ...form, email: value })}
               />
 
               <InputField
@@ -155,9 +145,15 @@ const SignUp = () => {
                 icon={icons.password}
                 secureTextEntry
                 value={form.password}
-                onChangeText={(value) =>
-                  setForm({ ...form, password: value })
-                }
+                onChangeText={(value) => setForm({ ...form, password: value })}
+              />
+
+              <InputField
+                label="Country"
+                placeholder="India"
+                icon={icons.location}
+                value={form.country}
+                editable={false}
               />
 
               <CustomButton
@@ -170,18 +166,13 @@ const SignUp = () => {
               {/* Divider */}
               <View className="flex-row items-center my-6">
                 <View className="flex-1 h-[1px] bg-gray-600" />
-                <Text className="mx-3 text-gray-400 text-sm">
-                  OR
-                </Text>
+                <Text className="mx-3 text-gray-400 text-sm">OR</Text>
                 <View className="flex-1 h-[1px] bg-gray-600" />
               </View>
 
               {/* Google Sign Up */}
               <TouchableOpacity className="flex-row items-center justify-center border border-gray-500 rounded-2xl py-3">
-                <Image
-                  source={icons.google}
-                  className="w-5 h-5 mr-3"
-                />
+                <Image source={icons.google} className="w-5 h-5 mr-3" />
                 <Text className="text-white font-JakartaSemiBold">
                   Sign Up with Google
                 </Text>
@@ -199,7 +190,6 @@ const SignUp = () => {
                 </Link>
               </Text>
             </View>
-
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

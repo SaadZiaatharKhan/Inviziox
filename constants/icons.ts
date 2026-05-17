@@ -30,6 +30,8 @@ import google from "@/assets/icons/google.png"
 import redshell from "@/assets/icons/redshell.png"
 import guardianshell from "@/assets/icons/guardianshell.png"
 import greenshell from "@/assets/icons/greenshell.png"
+import wishlist from "@/assets/icons/wishlist.png"
+import location from "@/assets/icons/location.png"
 
 export const icons = { 
   left_arrow,
@@ -64,5 +66,6 @@ export const icons = {
   location,
   redshell,
   guardianshell,
-  greenshell
+  greenshell,
+  wishlist
 };

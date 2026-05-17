@@ -1,8 +1,8 @@
-import { View, Text, Image, ImageSourcePropType } from "react-native";
-import React from "react";
-import { Tabs } from "expo-router";
-import { icons } from "@/constants/icons";
 import { ThemeProvider } from "@/components/ThemeContext";
+import { icons } from "@/constants/icons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Image, ImageSourcePropType, Text, View } from "react-native";
 
 const TabIcon = ({
   source,
@@ -19,7 +19,7 @@ const TabIcon = ({
       resizeMode="contain"
       className="w-7 h-7"
       style={{
-        tintColor: focused ? "#ffffff" : "#6b7280", // white / gray
+        tintColor: focused ? "#ffffff" : "#6b7280",
       }}
     />
     <Text
@@ -49,7 +49,7 @@ const AddTabIcon = ({ focused }: { focused: boolean }) => (
         resizeMode="contain"
         className="w-8 h-8"
         style={{
-          tintColor: "#1f2937", // dark gray
+          tintColor: "#1f2937",
         }}
       />
     </View>
@@ -93,13 +93,13 @@ const _Layout = () => {
           />
 
           <Tabs.Screen
-            name="market"
+            name="wishlist"
             options={{
               tabBarIcon: ({ focused }) => (
                 <TabIcon
-                  source={icons.market}
+                  source={icons.wishlist}
                   focused={focused}
-                  title="Market"
+                  title="Wishlist"
                 />
               ),
             }}
